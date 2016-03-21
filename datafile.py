@@ -1,5 +1,6 @@
 from itertools import islice
 from parse import parse
+import datetime
 
 class ParseException(Exception):
     pass
@@ -37,3 +38,51 @@ class CRUDataFile():
 
         #make sure we only run read_header once per file
         self._header_read = True
+
+    @property
+    def numYears(self):
+        """Gets the number of years the data set encompases"""
+        if not self._header_read:
+            raise ValueError("numYears has no value until read_header() is called")
+        return self.maxYear - self.minYear + 1
+
+    def gridboxes(self):
+        """Returns an iterator of GridBoxes from the current file"""
+        
+        #make sure header is read
+        self.read_header()
+        
+        counter = 0
+        line = self._file.readline()
+        while line:
+            counter += 1
+            grid_header = parse("Grid-ref={xref:>d},{yref:>d}", line)
+            if not grid_header:
+                raise ParseException("Error parsing Grid Box header for Grid Box #{}".format(counter))
+            yield self.read_gridbox_data(**grid_header.named)
+
+            line = self._file.readline()
+
+        if counter != self.numBoxes:
+            raise ParseError("Expected {} Boxes, found {}".format(self.numBoxes, counter))
+
+    def read_gridbox_data(self, xref, yref):
+        """Reads the data for a grid box from file and returns it contained in
+        a GridBox"""
+
+        class GridBox():
+            """Represents a time series for a single grid box"""
+
+            def __init__(self, xref, yref):
+                self.xref = xref
+                self.yref = yref
+                self.data = []
+
+        grid = GridBox(xref, yref)
+        for year in range(self.minYear, self.maxYear + 1):
+            line = self._file.readline()
+            for month, value in enumerate(map(int, line.split()), start=1):
+                date = datetime.date(year, month, 1)
+                grid.data.append( (date, value) )
+
+        return grid
