@@ -9,7 +9,7 @@ from collections import namedtuple
 from unittest.mock import sentinel
 
 class TestCRUDataFile(ut.TestCase):
-    
+
     file_name = os.path.join(os.path.dirname(__file__), 'TestData')
     #convenience for defining expected data values
     Data = namedtuple('Data', ['year', 'month', 'value'])
@@ -77,7 +77,7 @@ class TestCRUDataFile(ut.TestCase):
         datafile = self._file
 
         grids = list(datafile.gridboxes())
-        
+
         self.assertEqual(grids[0].xref, 1)
         self.assertEqual(grids[0].yref, 148)
 
@@ -90,5 +90,5 @@ class TestCRUDataFile(ut.TestCase):
 
 
         self.check_data(grids[0].data, self.expected_data1)
-        
+
         self.assertEqual(len(grids[0].data), 12*datafile.numYears)

@@ -48,10 +48,10 @@ class CRUDataFile():
 
     def gridboxes(self):
         """Returns an iterator of GridBoxes from the current file"""
-        
+
         #make sure header is read
         self.read_header()
-        
+
         counter = 0
         line = self._file.readline()
         while line:
