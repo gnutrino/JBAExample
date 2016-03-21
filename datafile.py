@@ -1,5 +1,6 @@
 from itertools import islice
 from parse import parse
+from collections import namedtuple
 import datetime
 
 class ParseException(Exception):
@@ -38,6 +39,15 @@ class CRUDataFile():
 
         #make sure we only run read_header once per file
         self._header_read = True
+
+    def data_points(self):
+        """Returns an iterator of DataPoints in the file"""
+        #dummy until db code gets written
+        DataPoint = namedtuple('DataPoint', ['xref', 'yref', 'date', 'value'])
+
+        for grid in self.gridboxes():
+            for date, value in grid.data:
+                yield DataPoint(grid.xref, grid.yref, date, value)
 
     @property
     def numYears(self):
