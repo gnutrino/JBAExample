@@ -74,7 +74,7 @@ class CRUDataFile():
             line = self._file.readline()
 
         if counter != self.numBoxes:
-            raise ParseError("Expected {} Boxes, found {}".format(self.numBoxes, counter))
+            raise ParseException("Expected {} Boxes, found {}".format(self.numBoxes, counter))
 
     def read_gridbox_data(self, xref, yref):
         """Reads the data for a grid box from file and returns it contained in
