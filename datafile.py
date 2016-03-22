@@ -24,7 +24,7 @@ class CRUDataFile():
 
         #formats to be accepted by parse for each header line
         header_formats = [
-                "{} file created on {} at {} by {}",
+                "{info} file created on {} at {} by {}",
                 "{extension} = {parameter} ({units})",
                 "CRU TS 2.1",
                 "[Long={}] [Lati={}] [Grid X,Y={}]",

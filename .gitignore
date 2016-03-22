@@ -1,3 +1,4 @@
 *.pre
 __pycache__/
 *.swp
+*.db
