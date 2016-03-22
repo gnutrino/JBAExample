@@ -28,7 +28,7 @@ class CRUDataFile():
                 "{extension} = {parameter} ({units})",
                 "CRU TS 2.1",
                 "[Long={}] [Lati={}] [Grid X,Y={}]",
-                "[Boxes={numBoxes:>d}] [Years={minYear:d}-{maxYear:d}] [Multi={}] [Missing={}]",
+                "[Boxes={}] [Years={minYear:d}-{maxYear:d}] [Multi={}] [Missing={}]",
             ]
 
         for line_num, result in enumerate(map(parse, header_formats, header)):
@@ -72,9 +72,6 @@ class CRUDataFile():
             yield self.read_gridbox_data(**grid_header.named)
 
             line = self._file.readline()
-
-        if counter != self.numBoxes:
-            raise ParseException("Expected {} Boxes, found {}".format(self.numBoxes, counter))
 
     def read_gridbox_data(self, xref, yref):
         """Reads the data for a grid box from file and returns it contained in
