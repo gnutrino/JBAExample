@@ -17,7 +17,7 @@ class TestCRUDataFile(ut.TestCase):
             Data(1991, 1, 3020),
             Data(1991, 2, 2820),
             Data(1992, 1, 3020),
-            Data(1993, 4, 2880),
+            Data(1993, 4, 12880),
             Data(2000, 12, 2630),
         ]
 
