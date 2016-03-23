@@ -6,12 +6,12 @@ from sqlalchemy import Table, Column, MetaData, create_engine
 from sqlalchemy.orm import sessionmaker, mapper
 from sqlalchemy.types import Integer, Date
 
-def chunk(iterator, batch_size):
+def chunk(iterator, chunk_size):
     """utility function to batch an iterable into chunks without reading it all
     into memory"""
     iterator = iter(iterator)
     while True:
-        chunk = tuple(islice(iterator, batch_size))
+        chunk = tuple(islice(iterator, chunk_size))
         if not chunk:
             return
         yield chunk
@@ -34,7 +34,7 @@ class CRUTable():
         drop the table first"""
         if not append:
             self._table.drop(self.database, checkfirst=True)
-        self._table.create(self.database)
+        self._table.create(self.database, checkfirst=True)
         
     def add_row(self, row):
         """Adds a row to the table. 
@@ -42,7 +42,8 @@ class CRUTable():
         self.database.execute(self._table.insert(row))
 
     def add_rows(self, rows, batch_size=120000):
-        """Adds multiple rows from an iterator."""
+        """Adds multiple rows from an iterator. Batches inserts using the
+        batch_size argument"""
         for batch in chunk(rows, batch_size):
             self.database.execute(
                     self._table.insert(),
