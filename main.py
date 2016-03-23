@@ -9,7 +9,7 @@ def parse_args(argv):
     parser.add_argument(
             'fname', 
             metavar='FILE',
-            help='File(s) to read data from'
+            help='File to read data from'
         )
     parser.add_argument(
             '-t', '--table-name',
@@ -26,13 +26,13 @@ def parse_args(argv):
             type=int,
             help='Batch size for inserts into the database. Too low a value\
                   can cause performance issues, too high a value may cause\
-                  database errors depending on the driver used. Defaults to\
-                  120,000 (1000 grid boxes worth of data)'
+                  errors depending on the driver used. Defaults to 120,000\
+                  (1000 grid boxes worth of data for a 10 year file)'
         )
     parser.add_argument(
             '-a', '--append',
             action='store_true',
-            help='Allows appending data to an existing table. If not set the\
+            help='Allows data to be appended to an existing table. If not set the\
                   table will be dropped and recreated if it already exists'
         )
     parser.add_argument(
