@@ -21,11 +21,6 @@ def parse_args(argv):
             help="Specifies the database to use in SQLAlchemy URI form, default is 'sqlite:///FILE.db'"
         )
     parser.add_argument(
-            '-v', '--verbose',
-            action='store_true',
-            help='Causes generated SQL statements to be echoed to stderr for debugging purposes'
-        )
-    parser.add_argument(
             '-b', '--batch',
             default=120000,
             type=int,
@@ -39,6 +34,11 @@ def parse_args(argv):
             action='store_true',
             help='Allows appending data to an existing table. If not set the\
                   table will be dropped and recreated if it already exists'
+        )
+    parser.add_argument(
+            '-v', '--verbose',
+            action='store_true',
+            help='Causes generated SQL statements to be echoed to stderr for debugging purposes'
         )
 
     args = parser.parse_args(argv)
