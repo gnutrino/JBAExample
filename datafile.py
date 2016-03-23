@@ -60,39 +60,40 @@ class CRUDataFile():
         return self.maxYear - self.minYear + 1
 
     def gridboxes(self):
-        """Returns an iterator of GridBoxes from the current file"""
+        """Returns a generator of GridBoxes from the current file"""
 
         #make sure header is read
         self.read_header()
 
-        counter = 0
+        while True:
+            grid = self.read_gridbox()
+            if grid is None:
+                return
+            yield grid
+
+    def read_gridbox(self):
+        """Returns a GridBox read from the current file read position or None is at EOF"""
         line = self._file.readline()
-        while line:
-            counter += 1
-            grid_header = parse("Grid-ref={xref:>d},{yref:>d}", line)
-            if not grid_header:
-                raise ParseException("Error parsing Grid Box header for Grid Box #{}".format(counter))
-            yield self.read_gridbox_data(**grid_header.named)
+        if not line:
+            return None
 
-            line = self._file.readline()
+        grid_header = parse("Grid-ref={xref:>d},{yref:>d}", line)
+        if not grid_header:
+            raise ParseException("Invalid grid header: {}".format(line))
 
-    def read_gridbox_data(self, xref, yref):
-        """Reads the data for a grid box from file and returns it contained in
-        a GridBox"""
+        grid = GridBox(**grid_header.named)
 
-        class GridBox():
-            """Represents a time series for a single grid box"""
-
-            def __init__(self, xref, yref):
-                self.xref = xref
-                self.yref = yref
-                self.data = []
-
-        grid = GridBox(xref, yref)
         for year in range(self.minYear, self.maxYear + 1):
             line = self._file.readline()
             for month, value in enumerate(map(int, line.split()), start=1):
                 date = datetime.date(year, month, 1)
                 grid.data.append( (date, value) )
-
         return grid
+
+class GridBox():
+    """Represents a time series for a single grid box"""
+
+    def __init__(self, xref, yref):
+        self.xref = xref
+        self.yref = yref
+        self.data = []

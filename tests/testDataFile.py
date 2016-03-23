@@ -4,7 +4,7 @@ import unittest as ut
 import datetime
 import os
 
-from datafile import CRUDataFile
+from datafile import CRUDataFile, GridBox
 from collections import namedtuple
 from unittest.mock import sentinel
 
@@ -58,15 +58,15 @@ class TestCRUDataFile(ut.TestCase):
                 self.assertEqual(data[index], (datetime.date(d.year, d.month, 1), d.value))
 
 
-    def test_read_gridbox_data(self):
+    def test_read_gridbox(self):
         datafile = self._file
 
         datafile.read_header()
-        datafile._file.readline()
-        grid = datafile.read_gridbox_data(sentinel.xref,sentinel.yref)
 
-        self.assertIs(grid.xref, sentinel.xref)
-        self.assertIs(grid.yref, sentinel.yref)
+        grid = datafile.read_gridbox()
+
+        self.assertIs(grid.xref, 1)
+        self.assertIs(grid.yref, 148)
 
         self.check_data(grid.data, self.expected_data1)
 
