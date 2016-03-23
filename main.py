@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 from datafile import CRUDataFile
-from db import DataBase, CRUTable
+from db import CRUTable
 from argparse import ArgumentParser
-from itertools import islice
 
 def parse_args(argv):
     parser = ArgumentParser(description='Read data from file, transform and store in a database.')
@@ -28,10 +27,12 @@ def parse_args(argv):
         )
     parser.add_argument(
             '-b', '--batch',
+            default=120000,
             type=int,
-            default=1024,
-            help='Number of datapoints written to the database per transaction.\
-                  Too low a value will cause performance issues. Defaults to 1024'
+            help='Batch size for inserts into the database. Too low a value\
+                  can cause performance issues, too high a value may cause\
+                  database errors depending on the driver used. Defaults to\
+                  120,000 (1000 grid boxes worth of data)'
         )
 
     args = parser.parse_args(argv)
@@ -54,10 +55,9 @@ def main(argv):
         if not args.table_name:
             args.table_name = get_default_table_name(datafile)
 
-        database = DataBase(args.database, echo = args.verbose)
-        table = CRUTable(args.table_name, database)
+        table = CRUTable(args.table_name, args.database, echo=args.verbose)
 
-        table.add_rows(datafile.data_points(), batch=args.batch)
+        table.add_rows(datafile.data_points(), batch_size=args.batch)
 
 if __name__ == "__main__":
     import sys

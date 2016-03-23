@@ -98,14 +98,18 @@ class TestCRUDataFile(ut.TestCase):
 
         data = list(datafile.data_points())
 
-        self.assertEqual(data[0].xref, 1)
-        self.assertEqual(data[0].yref, 148)
-        self.assertEqual(data[0].date, datetime.date(1991,1,1))
-        self.assertEqual(data[0].value, 3020)
+        self.assertEqual(data[0], {
+            'Xref' : 1,
+            'Yref' : 148,
+            'Date' : datetime.date(1991,1,1),
+            'Value': 3020,
+        })
 
-        self.assertEqual(data[-1].xref, 1)
-        self.assertEqual(data[-1].yref, 311)
-        self.assertEqual(data[-1].date, datetime.date(2000,12,1))
-        self.assertEqual(data[-1].value, 450)
+        self.assertEqual(data[-1], {
+            'Xref' : 1,
+            'Yref' : 311,
+            'Date' : datetime.date(2000,12,1),
+            'Value': 450,
+        })
 
         self.assertEqual(len(data), datafile.numBoxes*datafile.numYears*12)

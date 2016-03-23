@@ -21,25 +21,25 @@ class testFuncs(ut.TestCase):
         self.assertEqual(args.fname, 'TestData')
         self.assertIsNone(args.table_name)
         self.assertEqual(args.database, 'sqlite:///TestData.db')
+        self.assertEqual(args.batch, 120000)
         self.assertFalse(args.verbose)
-        self.assertEqual(args.batch, 1024)
 
     def test_parse_args_options(self):
-        argv = ['-t', 'test_table', '-d', 'sqlite://', '-b', '240', '-v', 'TestData']
+        argv = ['-t', 'test_table', '-d', 'sqlite://', '-b', '120', '-v', 'TestData']
         args = main.parse_args(argv)
 
         self.assertEqual(args.fname, 'TestData')
         self.assertEqual(args.table_name, 'test_table')
         self.assertEqual(args.database, 'sqlite://')
+        self.assertEqual(args.batch, 120)
         self.assertTrue(args.verbose)
-        self.assertEqual(args.batch, 240)
 
 class testMain(ut.TestCase):
 
     def setUp(self):
         self.datafile = rel_path('TestData')
         self.database = self.datafile + '.db'
-        self.argv = ['-t', 'test_table', '-b', '120', self.datafile]
+        self.argv = ['-t', 'test_table', self.datafile]
 
     def tearDown(self):
         try:

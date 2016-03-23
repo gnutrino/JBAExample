@@ -28,7 +28,7 @@ class CRUDataFile():
                 "{extension} = {parameter} ({units})",
                 "CRU TS 2.1",
                 "[Long={}] [Lati={}] [Grid X,Y={}]",
-                "[Boxes={}] [Years={minYear:d}-{maxYear:d}] [Multi={}] [Missing={}]",
+                "[Boxes={numBoxes:>d}] [Years={minYear:d}-{maxYear:d}] [Multi={}] [Missing={}]",
             ]
 
         for line_num, result in enumerate(map(parse, header_formats, header)):
@@ -41,13 +41,16 @@ class CRUDataFile():
         self._header_read = True
 
     def data_points(self):
-        """Returns an iterator of DataPoints in the file"""
-        #dummy until db code gets written
-        DataPoint = namedtuple('DataPoint', ['xref', 'yref', 'date', 'value'])
+        """Returns an iterator of datapoints in the file as dictionaries"""
 
         for grid in self.gridboxes():
             for date, value in grid.data:
-                yield DataPoint(grid.xref, grid.yref, date, value)
+                yield {
+                    'Xref' : grid.xref,
+                    'Yref' : grid.yref,
+                    'Date' : date,
+                    'Value': value
+                    }
 
     @property
     def numYears(self):
