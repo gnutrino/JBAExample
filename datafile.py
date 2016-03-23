@@ -85,10 +85,26 @@ class CRUDataFile():
 
         for year in range(self.minYear, self.maxYear + 1):
             line = self._file.readline()
-            for month, value in enumerate(map(int, line.split()), start=1):
+            for month, value in enumerate(self._split_line(line), start=1):
                 date = datetime.date(year, month, 1)
                 grid.data.append( (date, value) )
+
+        if len(grid.data) != self.numYears*12:
+            raise ParseError("Incorrect number of points read from grid {}".format(grid))
         return grid
+
+    def _split_line(self, line):
+        """splits line into ints representing individual datavalues given that
+        each value is a right aligned int with width 5 characters"""
+
+        #remove newline character
+        line = line.rstrip('\n')
+
+        while line:
+            chunk = line[:5]
+            line = line[5:]
+            chunk.lstrip()
+            yield int(chunk)
 
 class GridBox():
     """Represents a time series for a single grid box"""
@@ -97,3 +113,6 @@ class GridBox():
         self.xref = xref
         self.yref = yref
         self.data = []
+
+    def __str__(self):
+        return "({},{})".format(self.xref, self.yref)
