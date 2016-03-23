@@ -23,9 +23,10 @@ class testFuncs(ut.TestCase):
         self.assertEqual(args.database, 'sqlite:///TestData.db')
         self.assertEqual(args.batch, 120000)
         self.assertFalse(args.verbose)
+        self.assertFalse(args.append)
 
     def test_parse_args_options(self):
-        argv = ['-t', 'test_table', '-d', 'sqlite://', '-b', '120', '-v', 'TestData']
+        argv = ['-t', 'test_table', '-d', 'sqlite://', '-b', '120', '-a', '-v', 'TestData']
         args = main.parse_args(argv)
 
         self.assertEqual(args.fname, 'TestData')
@@ -33,6 +34,7 @@ class testFuncs(ut.TestCase):
         self.assertEqual(args.database, 'sqlite://')
         self.assertEqual(args.batch, 120)
         self.assertTrue(args.verbose)
+        self.assertTrue(args.append)
 
 class testMain(ut.TestCase):
 

@@ -19,7 +19,7 @@ def chunk(iterator, batch_size):
 class CRUTable():
     """Represents a table for CRU data in a database."""
 
-    def __init__(self, table_name, database_uri, echo=False):
+    def __init__(self, table_name, database_uri, append=False, echo=False):
         self._table = Table(table_name, MetaData(),
                 Column('Xref', Integer, primary_key=True),
                 Column('Yref', Integer, primary_key=True),
@@ -27,12 +27,14 @@ class CRUTable():
                 Column('Value', Integer),
             )
         self.database = create_engine(database_uri, echo=echo)
-        self.create()
+        self.create(append)
 
-    def create(self, checkfirst=True):
-        """Creates the table in the database. If checkfirst is True will not
-        attempt to create an already existing table"""
-        self._table.create(self.database, checkfirst=checkfirst)
+    def create(self, append=False):
+        """Creates the table in the database. If append is False it will
+        drop the table first"""
+        if not append:
+            self._table.drop(self.database, checkfirst=True)
+        self._table.create(self.database)
         
     def add_row(self, row):
         """Adds a row to the table. 
