@@ -1,6 +1,6 @@
 Code example for JBA job application
 
-##Usage
+## Usage
     ./main.py [-h] [-t TABLE_NAME] [-d DATABASE] [-b BATCH] [-a] [-v] FILE
 
     Read data from file, transform and store in a database.
@@ -29,7 +29,7 @@ Code example for JBA job application
       -v, --verbose         Causes generated SQL statements to be echoed to stderr
                             for debugging purposes
 
-##Requirements
+## Requirements
 
 Minimal requirements are listed in Requirements.txt, to install requirements using pip use:
 
